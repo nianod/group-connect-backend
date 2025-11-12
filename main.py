@@ -12,13 +12,13 @@ from Routes.group import router as group_router
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",
-    "https://group-connect-gamma.vercel.app"
+    "http://localhost:5173/",
+    "https://group-connect-gamma.vercel.app/"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = origins,
+    allow_origins = ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
