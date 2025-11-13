@@ -8,16 +8,17 @@ from Routes import user
 from Routes.send import router as send_router  
 from Routes.group import router as group_router
 app = FastAPI()
+import os 
+
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+print("origina are...", origins)
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = [
-        "http://localhost:5173",
-        "https://group-connect-gamma.vercel.app"
-    ],
+    allow_origins =origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_methods=["*"],
     allow_headers=["*"]
 )
 
