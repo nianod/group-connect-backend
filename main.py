@@ -7,19 +7,16 @@ from fastapi.responses import RedirectResponse
 from Routes import user
 from Routes.send import router as send_router  
 from Routes.group import router as group_router
-import os
-
 app = FastAPI()
-
-ALLOWED_ORIGINS = os.getenv(
-    "ALLOWED_ORIGINS", 
-    "https://group-connect-gamma.vercel.app"
-).split(",")
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],
+    allow_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://group-connect-gamma.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"]
