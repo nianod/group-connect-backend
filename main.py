@@ -84,7 +84,7 @@ from fastapi import HTTPException, status
 @app.post('/signup')
 async def Register(user: UserCredentials):
     try:
-        # Blocking DB call → threadpool
+        # Blocking DB call == threadpool
         existing_user = await run_in_threadpool(
             lambda: users_collection.find_one({'email': user.email})
         )
@@ -95,12 +95,12 @@ async def Register(user: UserCredentials):
                 detail="User already exists"
             )
 
-        # Hashing (blocking) → threadpool
+        # Hashing == threadpool
         hashed_password = await run_in_threadpool(
             lambda: hash_password(user.password)
         )
 
-        # Insert (blocking) → threadpool
+        # Insert == threadpool
         await run_in_threadpool(
             lambda: users_collection.insert_one({
                 "email": user.email,
@@ -109,7 +109,6 @@ async def Register(user: UserCredentials):
             })
         )
 
-        # JWT creation is also blocking → threadpool
         token = await run_in_threadpool(
             lambda: access_token({"email": user.email})
         )
@@ -123,9 +122,7 @@ async def Register(user: UserCredentials):
         return {"error": f"Registration failed: {str(e)}"}
 
     
-
-
-
 app.include_router(user.router, prefix="/user")
 app.include_router(group_router)
 app.include_router(send_router)
+
