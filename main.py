@@ -78,28 +78,50 @@ async def Login(user: LoginCredentials):
 
 
 # Register Route
+from starlette.concurrency import run_in_threadpool
+from fastapi import HTTPException, status
+
 @app.post('/signup')
 async def Register(user: UserCredentials):
     try:
-        existing_user = users_collection.find_one({'email': user.email})
+        # Blocking DB call → threadpool
+        existing_user = await run_in_threadpool(
+            lambda: users_collection.find_one({'email': user.email})
+        )
+
         if existing_user:
-            return {"error": "User already exists"}
-        
-        # hashed_password = hash_password(user["password"])
-        hashed_password = hash_password(user.password)
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User already exists"
+            )
 
+        # Hashing (blocking) → threadpool
+        hashed_password = await run_in_threadpool(
+            lambda: hash_password(user.password)
+        )
 
-        #Insert data into mongo
-        users_collection.insert_one({
-            "email": user.email,
-            "password": hashed_password,
-            "name": user.name
-        })
-        # token = access_token({"email": user["email"]})
-        token = access_token({"email": user.email})
+        # Insert (blocking) → threadpool
+        await run_in_threadpool(
+            lambda: users_collection.insert_one({
+                "email": user.email,
+                "password": hashed_password,
+                "name": user.name
+            })
+        )
+
+        # JWT creation is also blocking → threadpool
+        token = await run_in_threadpool(
+            lambda: access_token({"email": user.email})
+        )
+
         return {"message": "User registered successfully", "token": token}
+
+    except HTTPException:
+        raise
+
     except Exception as e:
         return {"error": f"Registration failed: {str(e)}"}
+
     
 
 
