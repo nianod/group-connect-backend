@@ -4,6 +4,8 @@ from Auth.Services.authService import hash_password
 from Auth.Services.authService import verify_password
 from pydantic import BaseModel
 from fastapi.responses import RedirectResponse
+from starlette.concurrency import run_in_threadpool
+from fastapi import HTTPException, status
 from Routes import user
 from Routes.send import router as send_router  
 from Routes.group import router as group_router
@@ -62,25 +64,31 @@ async def test():
 @app.post('/signin')
 async def Login(user: LoginCredentials):
     try:
-        existing_user = users_collection.find_one({"email": user.email})
+        existing_user = await run_in_threadpool(
+            lambda: users_collection.find_one({"email": user.email})
+        )
 
         if not existing_user:
             return {"Message": "User not found"}
-        
 
-        if not verify_password(user.password, existing_user['password']):
+        is_valid = await run_in_threadpool(
+            lambda: verify_password(user.password, existing_user["password"])
+        )
+
+        if not is_valid:
             return {"Message": "User not found"}
-        
-        token = access_token({"email": user.email})
+
+        token = await run_in_threadpool(
+            lambda: access_token({"email": user.email})
+        )
+
         return {"Message": "Login successful", "token": token}
+
     except Exception as e:
         return {"error": f"Login Failed {str(e)}"}
 
 
 # Register Route
-from starlette.concurrency import run_in_threadpool
-from fastapi import HTTPException, status
-
 @app.post('/signup')
 async def Register(user: UserCredentials):
     try:
