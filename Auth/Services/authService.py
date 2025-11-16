@@ -1,5 +1,4 @@
- 
-import jwt
+from jose import jwt
 from datetime import datetime, timedelta
 import os
 import bcrypt
@@ -18,7 +17,7 @@ if JWT_SECRET is None:
     raise Exception('JWT SECRET environment not set')
 algorithm = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")   
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")   
 
 
 # Password hashing
@@ -34,7 +33,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def access_token(data: dict, expires_delta: timedelta = timedelta(hours=9)):
     to_encode = data.copy()
     to_encode.update({"exp": datetime.utcnow() + expires_delta})
-    token = jwt.encode(to_encode, JWT_SECRET, algorithm)
+    token = jwt.encode(to_encode, JWT_SECRET, algorithm=algorithm)
     return token
 
 def decode_token(token: str):

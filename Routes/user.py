@@ -27,3 +27,4 @@ def get_profile(token: str = Depends(oauth2_scheme)):
         return {"user": {"name": user["name"], "email": user["email"]}}
     except JWTError:
         raise HTTPException(status_code=400, detail="Invalid token")
+

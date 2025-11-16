@@ -78,9 +78,14 @@ async def Login(user: LoginCredentials):
         if not is_valid:
             return {"Message": "User not found"}
 
+        # token = await run_in_threadpool(
+        #     lambda: access_token({"email": user.email})
+        # )
+
         token = await run_in_threadpool(
-            lambda: access_token({"email": user.email})
+            lambda: access_token({"_id": str(existing_user["_id"]), "email": user.email})
         )
+
 
         return {"Message": "Login successful", "token": token}
 
@@ -109,7 +114,7 @@ async def Register(user: UserCredentials):
         )
 
         # Insert == threadpool
-        await run_in_threadpool(
+        result = await run_in_threadpool(
             lambda: users_collection.insert_one({
                 "email": user.email,
                 "password": hashed_password,
@@ -117,9 +122,20 @@ async def Register(user: UserCredentials):
             })
         )
 
+        user_id = str(result.inserted_id)
+
         token = await run_in_threadpool(
-            lambda: access_token({"email": user.email})
+            lambda: access_token({"_id": user_id, "email": user.email})
         )
+        
+
+        # token = await run_in_threadpool(
+        #     lambda: access_token({"email": user.email})
+        # )
+
+        # token = await run_in_threadpool(
+        #     lambda: access_token({"_id": str(existing_user["_id"]), "email": user.email})
+        # )
 
         return {"message": "User registered successfully", "token": token}
 

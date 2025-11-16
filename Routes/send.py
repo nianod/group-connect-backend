@@ -13,3 +13,5 @@ def get_my_groups(current_user=Depends(get_current_user)):
     for g in groups:
         g["_id"] = str(g["_id"])
     return groups
+
+
