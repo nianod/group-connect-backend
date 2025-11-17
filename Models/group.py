@@ -14,3 +14,4 @@ def group_helper(group) -> dict:
         "location": group.get("location"),
         "created_at": group.get("created_at")
     }
+ 
