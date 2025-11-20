@@ -3,12 +3,14 @@ from bson import ObjectId
 def online_meeting(online) -> dict:
     return {
         "id": str(online["_id"]),
+        "creatorId": online.get("creatorId"),
         "sessionTitle": online["sessionTitle"],
         "subject": online["subject"],
         "meetingLink": online["meetingLink"],
-        "meetingDate": online["meetingDate"],
-        "meetingTime": online["meetingTime"],
+        "meetingDate": online.get("meetingDate"),
+        "meetingTime": online.get("meetingTime"),
         "duration": online["duration"],
         "description": online["description"],
-        "meetingPlatform": online["meetingPlatform"]
+        "meetingPlatform": online["meetingPlatform"],
+        "created_at": str(online.get("created_at"))
     }
