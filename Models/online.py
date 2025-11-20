@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-def online_meeting(online) -> dict:
+def online_helper(online) -> dict:
     return {
         "id": str(online["_id"]),
         "creatorId": online.get("creatorId"),
