@@ -10,6 +10,7 @@ from Routes import user
 from Routes.send import router as send_router  
 from Routes.group import router as group_router
 from Routes.online import router as online_router
+from Routes.notes import router as notes_router
 
 app = FastAPI()
 import os 
@@ -152,3 +153,4 @@ app.include_router(user.router, prefix="/user")
 app.include_router(group_router)
 app.include_router(send_router)
 app.include_router(online_router)
+app.include_router(notes_router)
