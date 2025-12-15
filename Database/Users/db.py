@@ -18,5 +18,4 @@ db = client["group_connect"]
 users_collection = db["users"]
 groups_collection = db["group-create"]
 online_collection = db["group_create_online"]
-
-
+notes_collection = db["notes"]

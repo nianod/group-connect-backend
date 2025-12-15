@@ -7,6 +7,7 @@ from Auth.Services.authService import get_current_user
 
 router = APIRouter(prefix="/online", tags=["Online Meetings"])
 
+
 @router.post("/create")
 def create_online_session(
     online: onlineSession,

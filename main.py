@@ -14,8 +14,8 @@ from Routes.online import router as online_router
 app = FastAPI()
 import os 
 
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
-print("origina are...", origins)
+# origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+# print("origina are...", origins)
 
 
 app.add_middleware(
