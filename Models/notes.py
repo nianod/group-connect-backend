@@ -1,4 +1,4 @@
-from bson import ObjectId
+ from bson import ObjectId
 
 def create_note(note_data) -> dict:
     return {
@@ -9,3 +9,4 @@ def create_note(note_data) -> dict:
         "tags": note_data["tags"],
         "created_at": str(note_data.get("created_at"))
     }
+

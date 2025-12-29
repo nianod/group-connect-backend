@@ -8,3 +8,4 @@ class noteCreate(BaseModel):
     content: str
     tags: list[str]
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
