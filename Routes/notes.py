@@ -1,8 +1,9 @@
+# Routes/notes.py
 from fastapi import APIRouter, Depends
 from bson import ObjectId
 from Database.Users.db import notes_collection
 from Services.notes import noteCreate
-from Models.notes import create_note as note_model      
+from Models.notes import note_helper as note_model      
 from Auth.Services.authService import get_current_user
 
 router = APIRouter(prefix="/notes", tags=["Notes"])

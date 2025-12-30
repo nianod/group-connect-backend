@@ -1,6 +1,7 @@
- from bson import ObjectId
+# Models/notes.py
+from bson import ObjectId
 
-def create_note(note_data) -> dict:
+def note_helper(note_data) -> dict:
     return {
         "id": str(note_data["_id"]),
         "title": note_data["title"],
